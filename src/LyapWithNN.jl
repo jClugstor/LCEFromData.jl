@@ -119,6 +119,12 @@ function Ghat(invec, embedded_dat, model)
     out = vcat(out, model(invec))
 end
 
+function DGhat(invec, model)
+    inlen = length(invec)
+    mat = [Int(y == (x+1)) for x = 1:(inlen-1), y = 1:inlen]
+    jac = Flux.jacobian(model,invec)[1]
+    mat = vcat(mat, jac)
+end
 
 indat = collect(0:0.4:20)
 outdat = sin.(indat)
