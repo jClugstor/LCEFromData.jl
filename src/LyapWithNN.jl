@@ -99,10 +99,25 @@ outdat = outdat[begin:2:end]
 
 model = train(indat, outdat)
 
+jac = Flux.jacobian(model, [1,2,3,4,5])
+
 plot(reduce(vcat,model.(indat)), label = "Prediction", seriestype = :scatter)
 plot!(reduce(vcat,outdat), label = "Actual", seriestype = :scatter)
 
-
+function Ghat(invec, embedded_dat, model)
+    inlen = length(invec)
+    ind = nothing
+    for (index,point) in enumerate(embedded_dat)
+        if point == invec
+           ind = index 
+        end
+    end 
+    if isnothing(ind)
+        error("Supplied vector is not on the trajectory")
+    end
+    out = embedded_dat[ind+1][1:(inlen-1)]
+    out = vcat(out, model(invec))
+end
 
 
 indat = collect(0:0.4:20)
