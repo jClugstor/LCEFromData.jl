@@ -3,24 +3,7 @@
 #Implementing the method for calculating lyapunov spectrum from time series using Neural Networks
 #From Lyudmila A. Dimtrieva et. al
 
-using FractionalDiffEq, Plots, Flux, DynamicalSystems
-plotlyjs()
-
-function ChenSystem(du,u,p,t)
-    α, b, γ = p
-
-    x = u[1] 
-    y = u[2]
-    z = u[3]
-
-    dx = α*(y - x)
-    dy = (γ - α)*x - x*z + γ*y
-    dz = x*y - b*z
-
-    du[1] = dx
-    du[2] = dy
-    du[3] = dz
-end
+using FractionalDiffEq, Flux, DynamicalSystems, LinearAlgebra
 
 #need to collect data and set up the training set 
 function create_training_data(data::Dataset,τ)
@@ -40,11 +23,10 @@ function build_model(input_length, output_length, hidden)
     return Flux.Chain(
         Flux.Dense(input_length => hidden,tanh),
         Flux.Dense(hidden => hidden, tanh),
-        Flux.Dense(hidden => hidden, tanh),
         Flux.Dense(hidden => output_length))
 end
 
-function train(in_vals, out_vals)
+function train(in_vals, out_vals, iters)
     hidden = 50
 
     input_length = length(in_vals[1])
@@ -53,10 +35,10 @@ function train(in_vals, out_vals)
     model = build_model(input_length, output_length, hidden)
     loss(x,y) = Flux.Losses.mse(model(x), y)
     dat = zip(in_vals,out_vals)
-    opt = Descent(0.0001)
+    opt = Descent(0.01)
     
 
-    Flux.@epochs 2000 my_custom_train!(loss,Flux.params(model),dat, opt) 
+    Flux.@epochs iters my_custom_train!(loss,Flux.params(model),dat, opt) 
     model
 end
 
@@ -81,29 +63,6 @@ function my_custom_train!(loss, ps, data, opt)
     end
 end
 
-
-
-Span = (0,25)
-y0 = [1.0, 1.0, 1.0]
-pars = [35,3,27]
-q = [1,1,1]
-stepsize = 0.01
-prob = FODESystem(ChenSystem,q,y0,(0,5),pars)
-Ys = FractionalDiffEq.solve(prob, stepsize, PECE())
-x = Ys.u[1,:]
-Y, τ_vals, ts_vals, Ls, ϵs = pecuzal_embedding(x)
-indat, outdat = create_training_data(Y,τ_vals[end])
-
-indat = indat[begin:2:end]
-outdat = outdat[begin:2:end]
-
-model = train(indat, outdat)
-
-jac = Flux.jacobian(model, [1,2,3,4,5])
-
-plot(reduce(vcat,model.(indat)), label = "Prediction", seriestype = :scatter)
-plot!(reduce(vcat,outdat), label = "Actual", seriestype = :scatter)
-
 function Ghat(invec, embedded_dat, model)
     inlen = length(invec)
     ind = nothing
@@ -126,11 +85,25 @@ function DGhat(invec, model)
     mat = vcat(mat, jac)
 end
 
-indat = collect(0:0.4:20)
-outdat = sin.(indat)
 
-plot(indat,reduce(vcat,model.([[dat] for dat in indat])), label = "Prediction", seriestype = :scatter)
-plot!(indat,outdat, label = "Actual", seriestype = :scatter)
+function lyap_spectrum(invecs, model)
+    inlen = length(invecs)
+    finalR = nothing
+    qrs = []
+    
+
+    push!(qrs,qr(DGhat(invecs[1],model)))
+    for l in 2:(inlen - 1)
+        push!(qrs,qr(DGhat(invecs[l],model)*qrs[l-1].Q))
+    end
+
+
+    rs = [qrpair.R for qrpair in qrs]
+    #finalR = foldl(*,[mat.R for mat in qrs])
+    (1/inlen)*sum(x-> log.(abs.(diag(x))), rs)
+end
+
+
 
 
 

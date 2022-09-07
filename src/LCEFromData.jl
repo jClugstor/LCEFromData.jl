@@ -1,5 +1,5 @@
 module LCEFromData
 
-greet() = print("Hello World!")
+include("LyapWithNN.jl")
 
 end # module
