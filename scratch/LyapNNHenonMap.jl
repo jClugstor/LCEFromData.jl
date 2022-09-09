@@ -2,7 +2,7 @@ include("../src/LyapWithNN.jl")
 using Plots
 
 
-A = trajectory(Systems.henon(), 100000)
+A = trajectory(Systems.henon(), 100)
 dat = A[:,1]
 #plot(A[:,1], A[:,2], seriestype = :scatter)
 
@@ -11,15 +11,16 @@ Y = embed(A[:,1],2, 1)
 
 
 indat, outdat = create_training_data(Y,1)
-train_indat = indat[begin:100:end]
-train_outdat = outdat[begin:100:end]
+train_indat = indat[begin:1:end]
+train_outdat = outdat[begin:1:end]
 
 
-model = train(train_indat, train_outdat)
+model = train(train_indat, train_outdat,2000)
 
 
-#plot(reduce(vcat,model.(indat)), label = "Prediction", seriestype = :scatter)
-#plot!(reduce(vcat,outdat), label = "Actual", seriestype = :scatter)
+plot(reduce(vcat,model.(indat)), label = "Prediction", seriestype = :scatter)
+plot!(reduce(vcat,outdat), label = "Actual", seriestype = :scatter)
+
 lyapunovspectrum(Systems.henon(),10000)
 lyap_spectrum(indat,model)
 

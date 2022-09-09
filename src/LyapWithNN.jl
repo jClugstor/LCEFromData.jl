@@ -23,11 +23,12 @@ function build_model(input_length, output_length, hidden)
     return Flux.Chain(
         Flux.Dense(input_length => hidden,tanh),
         Flux.Dense(hidden => hidden, tanh),
+        Flux.Dense(hidden => hidden, tanh),
         Flux.Dense(hidden => output_length))
 end
 
 function train(in_vals, out_vals, iters)
-    hidden = 50
+    hidden = 20
 
     input_length = length(in_vals[1])
     output_length = length(out_vals[1])
@@ -35,7 +36,7 @@ function train(in_vals, out_vals, iters)
     model = build_model(input_length, output_length, hidden)
     loss(x,y) = Flux.Losses.mse(model(x), y)
     dat = zip(in_vals,out_vals)
-    opt = Descent(0.01)
+    opt = Descent(0.0001)
     
 
     Flux.@epochs iters my_custom_train!(loss,Flux.params(model),dat, opt) 
