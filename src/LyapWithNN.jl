@@ -3,7 +3,7 @@
 #Implementing the method for calculating lyapunov spectrum from time series using Neural Networks
 #From Lyudmila A. Dimtrieva et. al
 
-using FractionalDiffEq, Flux, DynamicalSystems, LinearAlgebra
+using Flux, DynamicalSystems, LinearAlgebra
 
 #need to collect data and set up the training set 
 function create_training_data(data::Dataset,τ)
@@ -28,7 +28,7 @@ function build_model(input_length, output_length, hidden)
 end
 
 function train(in_vals, out_vals, iters)
-    hidden = 20
+    hidden = 50
 
     input_length = length(in_vals[1])
     output_length = length(out_vals[1])
@@ -102,6 +102,22 @@ function lyap_spectrum(invecs, model)
     rs = [qrpair.R for qrpair in qrs]
     #finalR = foldl(*,[mat.R for mat in qrs])
     (1/inlen)*sum(x-> log.(abs.(diag(x))), rs)
+end
+
+
+function lyap_spectrum(invecs, model, bigN)
+    inlen = length(invecs)
+    bigT = Int(floor(inlen/bigN))
+    qrs = []
+
+    push!(qrs,qr(DGhat(invecs[1],model)))
+    for l in 2:(bigN - 1)
+        push!(qrs,qr(DGhat(invecs[l*bigT],model)*qrs[l-1].Q))
+    end
+    rs = [qrpair.R for qrpair in qrs]
+    #finalR = foldl(*,[mat.R for mat in qrs])
+    (1/inlen)*sum(x-> log.(abs.(diag(x))), rs)
+
 end
 
 
