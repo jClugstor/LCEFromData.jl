@@ -8,11 +8,27 @@ end
 
 
 
+#struct to hold data needed for wolf algorithm and to allow for dispatch when solving 
+struct WolfAlgorithm
+    fname
+    tau
+    ndim 
+    ires 
+    datcnt
+    maxbox
+    db::Basegen_db
 
+    dt
+    evolve
+    dismin
+    dismax
+    thmax
+end
 
-
-
-
+function WolfAlgorithm(fname,tau,ndim,ires,datcnt,maxbox,dt,evolve,dismin,dismax,thmax)
+    db = basgen(fname, tau, ndim, ires, datcnt, maxbox)
+    WolfAlgorithm(fname,tau,ndim,ires,datcnt,maxbox,db,dt,evolve,dismin,dismax,thmax)
+end
 
 #struct to hold basegen data base
 struct Basegen_db

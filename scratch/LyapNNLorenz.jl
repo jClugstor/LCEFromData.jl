@@ -2,7 +2,7 @@ include("../src/LyapWithNN.jl")
 using Plots
 plotlyjs()
 
-A = trajectory(Systems.lorenz(),100, Δt = 0.01)
+A = trajectory(Systems.lorenz(),1000, Δt = 0.01)
 lyapunovspectrum(Systems.lorenz(), 8000)
 
 

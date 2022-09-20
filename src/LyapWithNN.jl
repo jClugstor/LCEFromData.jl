@@ -105,20 +105,26 @@ function lyap_spectrum(invecs, model)
 end
 
 
-function lyap_spectrum(invecs, model, bigN)
+#use with continuous time systems
+function lyap_spectrum(invecs, model, τ)
     inlen = length(invecs)
-    bigT = Int(floor(inlen/bigN))
+    finalR = nothing
     qrs = []
+    
 
     push!(qrs,qr(DGhat(invecs[1],model)))
-    for l in 2:(bigN - 1)
-        push!(qrs,qr(DGhat(invecs[l*bigT],model)*qrs[l-1].Q))
+    for l in 2:(inlen - 1)
+        push!(qrs,qr(DGhat(invecs[l],model)*qrs[l-1].Q))
     end
+
+
     rs = [qrpair.R for qrpair in qrs]
     #finalR = foldl(*,[mat.R for mat in qrs])
-    (1/inlen)*sum(x-> log.(abs.(diag(x))), rs)
-
+    (1/(inlen*τ))*sum(x -> log.(abs.(diag(x))), rs)
 end
+
+
+
 
 
 

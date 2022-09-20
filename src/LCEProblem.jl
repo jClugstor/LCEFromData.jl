@@ -1,10 +1,10 @@
 struct LCEProblem
-    timeseries::AbstractArray
-    embedded_data::AbstractArray
+    timeseries::Array
+    embedded_data::EmbeddedData
 end
 
 struct LCESolution
-
+    LCEs::Array
 end
 
 struct EmbeddedData
@@ -12,5 +12,4 @@ struct EmbeddedData
     embedded_data::AbstractArray
     dim::Number
     tau::Number
-
 end
