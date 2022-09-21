@@ -8,8 +8,6 @@ struct WolfAlgorithm
     ires 
     datcnt
     maxbox
-    db::Basegen_db
-
     dt
     evolve
     dismin
@@ -17,10 +15,8 @@ struct WolfAlgorithm
     thmax
 end
 
-function WolfAlgorithm(fname,tau,ndim,ires,datcnt,maxbox,dt,evolve,dismin,dismax,thmax)
-    db = basgen(fname, tau, ndim, ires, datcnt, maxbox)
-    WolfAlgorithm(fname,tau,ndim,ires,datcnt,maxbox,db,dt,evolve,dismin,dismax,thmax)
-end
+
+
 
 #struct to hold basegen data base
 struct Basegen_db
@@ -205,7 +201,7 @@ end
 
 
 #basegen
-function basgen(fname, tau, ndim, ires, datcnt, maxbox)
+function basgen(fname::String, tau, ndim, ires, datcnt, maxbox)
     # Database generator for fet.m function
     # Taehyeun Park; The Cooper Union; EE'15
     
@@ -310,6 +306,115 @@ function basgen(fname, tau, ndim, ires, datcnt, maxbox)
     #db.nxtdat = nxtdat[1:datcnt]
     #db.data = data
 end
+
+
+
+function basgen(datlist::Array, tau, ndim, ires, datcnt, maxbox)
+    # Database generator for fet.m function
+    # Taehyeun Park; The Cooper Union; EE'15
+    
+    
+    #data = zeros(1,datcnt)
+    data = datlist
+    trck = 1
+    start = 1
+    fin = 0
+    
+    #for ii = 1:length(x)
+    #    #if cmp(x[ii], char(32)) || cmp(x[ii], Char(13)) || cmp(x[ii], Char(10)) || cmp(x[ii], Char(26))
+    #    if x[ii] == Char(32) || x[ii] == Char(13) || x[ii] == Char(10) || x[ii] == Char(26)
+    #        if fin >= start()
+    #            data[trck] = parse.(Float64,x[start:fin])
+    #            trck = trck + 1
+    #            if trck .> 8*floor(datcnt/8)
+    #                break
+    #            end
+    #        end
+    #        start = ii + 1
+    #    else
+    #        fin = ii
+    #    end
+    #end
+
+
+
+
+    
+    delay = collect(0:tau:(ndim-1)*tau)
+    
+    nxtbox = zeros(maxbox, ndim)
+    wherear = zeros(maxbox, ndim)
+    datptr = zeros(1,maxbox)
+    nxtdat = zeros(1,datcnt)
+    
+    datmin = minimum(data)
+    datmax = maximum(data)
+    
+    datmin = datmin - 0.01*(datmax - datmin)
+    datmax = datmax + 0.01*(datmax - datmin)
+    boxlen = (datmax - datmin)/ires
+    
+    boxcnt = 1
+    
+    for ii = 1:(datcnt-(ndim-1)*tau)
+        target = floor.((data[ii .+ delay] .- datmin)/boxlen)
+        runner = 1
+        chaser = 0
+        
+        jj = 1
+        while jj <= ndim
+            tmp = wherear[Int(runner),jj]-target[jj]
+            if tmp < 0
+                chaser = runner
+                runner = Int(nxtbox[runner,jj])
+                if runner != 0
+                    continue
+                end
+            end
+            if tmp != 0
+               boxcnt = boxcnt + 1
+               
+               if boxcnt .== maxbox
+                   error("Grid overflow, increase number of box count")
+               end
+               
+               for kk = 1:ndim
+                   wherear[boxcnt,kk] = wherear[chaser,kk]
+               end
+               wherear[boxcnt,jj] = target[jj]
+               nxtbox[chaser,jj] = boxcnt
+               nxtbox[boxcnt,jj] = runner
+               runner = Int(boxcnt)
+            end
+            jj = jj + 1
+        end
+        nxtdat[ii] = datptr[runner]
+        datptr[runner] = ii
+    end
+    
+    used = 0
+    for ii = 1:boxcnt
+        if datptr[ii] != 0
+            used = used + 1
+        end
+    end
+    db = Basegen_db(ndim,ires,tau,datcnt,boxcnt,datmax,datmin,boxlen,datptr[1:boxcnt],nxtbox[1:boxcnt,1:ndim],wherear[1:boxcnt,1:ndim],nxtdat[1:datcnt],data)
+    #db.ndim = ndim
+    #db.ires = ires
+    #db.tau = tau
+    #db.datcnt = datcnt
+    #db.boxcnt = boxcnt
+    #db.datmax = datmax
+    #db.datmin = datmin
+    #db.boxlen = boxlen
+    
+    #db.datptr = datptr[1:boxcnt]
+    #db.nxtbox = nxtbox[1:boxcnt, 1:ndim]
+    #db.wherear = wherear[1:boxcnt, 1:ndim]
+    #db.nxtdat = nxtdat[1:datcnt]
+    #db.data = data
+end
+
 
 function fet(db, dt, evolve, dismin, dismax, thmax)
     # Computes Lyapunov exponent of given data & parameters; generates output
@@ -440,11 +545,35 @@ dismax = 0.3;
 thmax = 30;
 out, SUM = fet(db, dt, evolve, dismin, dismax, thmax)
 
+x = readlines("src/Wolf Lyapunov/Data2.lor")
+#data = zeros(1,datcnt)
+datlist = parse.(Float64,x)
+db = basgen(datlist::Array, tau, ndim, ires, datcnt, maxbox)
+
+
 
 
 function solve(prob::LCEProblem, alg::WolfAlgorithm)
 
+    tau = alg.tau
+    ndim = alg.ndim
+    ires = alg.ires
+    datcnt = alg.datcnt
+    maxbox = alg.maxbox
+    datlist = prob.datlist
 
+    db = basgen(datlist, tau, ndim, ires, datcnt, maxbox)
+
+
+
+    dt = alg.dt
+    evolve = alg.evolve
+    dismin = alg.dismin
+    dismax = alg.dismax
+    thmax = alg.thmax
+    out, SUM = fet(db, dt, evolve, dismin, dismax, thmax)
+    lyaps = out[:,4]
+    LCEMaxSolution(lyaps[end],lyaps)
 
 end
 

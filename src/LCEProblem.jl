@@ -11,7 +11,11 @@ struct EmbeddedData
     tau::Number
 end
 
-struct LCESolution
+struct LCEMaxSolution
     maxLCE::Number
+    LCEprogression::Array
+end
+
+struct LCESpectrumSolution
     LCEs::Array
 end
