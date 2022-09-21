@@ -1,15 +1,17 @@
 struct LCEProblem
     timeseries::Array
+    timestep::Number
     embedded_data::EmbeddedData
 end
 
-struct LCESolution
-    LCEs::Array
-end
-
 struct EmbeddedData
-    timeseries::AbstractArray
-    embedded_data::AbstractArray
+    timeseries::Dataset
+    embedded_data::Dataset
     dim::Number
     tau::Number
+end
+
+struct LCESolution
+    maxLCE::Number
+    LCEs::Array
 end

@@ -1,13 +1,5 @@
 using DynamicalSystems, LinearAlgebra
 
-
-function wolf_lyapunov(data::Vector, SCALMX::Int, SCALMN::Int, EVOLV::Int; ANGLMX = 0.2)
-    
-end
-
-
-
-
 #struct to hold data needed for wolf algorithm and to allow for dispatch when solving 
 struct WolfAlgorithm
     fname
@@ -399,10 +391,10 @@ function fet(db, dt, evolve, dismin, dismax, thmax)
             #out = [out; its*evolve, disold, disnew, zlyap, (oldpnt-evolve), (newpnt-evolve)];
             
             if iang .== -1
-                write(fileID, "$(out[end,1:4])")
+                write(fileID, "$(out[end,1:4]) \n")
                 #fprintf(fileID, "#-d\t\t\t#-8.4f\t\t#-8.4f\t\t#-8.4f\n', out[end,1:4]")
             else()
-                write(fileID,"$([out[end,1:4],iang])")
+                write(fileID,"$(out[end,1:4]), $iang\n")
                 #fprintf(fileID, "#-d\t\t\t#-8.4f\t\t#-8.4f\t\t#-8.4f\t\t#-d\n', [out[end,1:4], iang]")
             end
     
@@ -450,5 +442,10 @@ out, SUM = fet(db, dt, evolve, dismin, dismax, thmax)
 
 
 
+function solve(prob::LCEProblem, alg::WolfAlgorithm)
+
+
+
+end
 
  
