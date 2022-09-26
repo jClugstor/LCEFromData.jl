@@ -1,18 +1,15 @@
 using DynamicalSystems, LinearAlgebra
 
 #struct to hold data needed for wolf algorithm and to allow for dispatch when solving 
-struct WolfAlgorithm
-    fname
-    tau
-    ndim 
-    ires 
-    datcnt
-    maxbox
-    dt
-    evolve
-    dismin
-    dismax
-    thmax
+@kwdef struct WolfAlgorithm
+    datcnt = 16384;
+    ires = 10;
+    maxbox = 6000;
+    dt = 0.01;
+    evolve = 20;
+    dismin = 0.001;
+    dismax = 0.3;
+    thmax = 30;
 end
 
 
@@ -555,12 +552,12 @@ db = basgen(datlist::Array, tau, ndim, ires, datcnt, maxbox)
 
 function solve(prob::LCEProblem, alg::WolfAlgorithm)
 
-    tau = alg.tau
-    ndim = alg.ndim
+    tau = prob.embedded_data.tau
+    ndim = prob.embedded_data.dim
     ires = alg.ires
     datcnt = alg.datcnt
     maxbox = alg.maxbox
-    datlist = prob.datlist
+    datlist = prob.timeseries
 
     db = basgen(datlist, tau, ndim, ires, datcnt, maxbox)
 
