@@ -1,8 +1,7 @@
 using DynamicalSystems, LinearAlgebra
 
 #struct to hold data needed for wolf algorithm and to allow for dispatch when solving 
-@kwdef struct WolfAlgorithm
-    datcnt = 16384;
+Base.@kwdef struct WolfAlgorithm <: LCEAlgorithm
     ires = 10;
     maxbox = 6000;
     dt = 0.01;
@@ -527,35 +526,12 @@ function fet(db, dt, evolve, dismin, dismax, thmax)
     return out, SUM
 end
 
-
-fname = "./src/Wolf Lyapunov/Data2.lor"
-datcnt = 16384;
-tau = 10;
-ndim = 3;
-ires = 10;
-maxbox = 6000;
-db = basgen(fname, tau, ndim, ires, datcnt, maxbox);
-dt = .01;
-evolve = 20;
-dismin = 0.001;
-dismax = 0.3;
-thmax = 30;
-out, SUM = fet(db, dt, evolve, dismin, dismax, thmax)
-
-x = readlines("src/Wolf Lyapunov/Data2.lor")
-#data = zeros(1,datcnt)
-datlist = parse.(Float64,x)
-db = basgen(datlist::Array, tau, ndim, ires, datcnt, maxbox)
-
-
-
-
 function solve(prob::LCEProblem, alg::WolfAlgorithm)
 
     tau = prob.embedded_data.tau
     ndim = prob.embedded_data.dim
     ires = alg.ires
-    datcnt = alg.datcnt
+    datcnt = length(prob.timeseries)
     maxbox = alg.maxbox
     datlist = prob.timeseries
 
@@ -570,7 +546,7 @@ function solve(prob::LCEProblem, alg::WolfAlgorithm)
     thmax = alg.thmax
     out, SUM = fet(db, dt, evolve, dismin, dismax, thmax)
     lyaps = out[:,4]
-    LCEMaxSolution(lyaps[end],lyaps)
+    LCEMaxSolution(lyaps[end],lyaps,alg)
 
 end
 

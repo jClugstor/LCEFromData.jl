@@ -12,5 +12,5 @@ em = embed(x,dim,tau)
 
 em = EmbeddedData(x, em,dim,tau)
 prob = LCEProblem(em, Δt)
-alg = DivergenceAlgorithm(lyapspan = 0:4:200)
-solve(prob,alg)
+alg = DivergenceAlgorithm(lyapspan = 0:4:200, ntype = NeighborNumber(5))
+sol = solve(prob,alg)

@@ -28,7 +28,7 @@ function build_model(input_length, output_length, hidden)
 end
 
 function train(in_vals, out_vals, iters)
-    hidden = 50
+    hidden = 10
 
     input_length = length(in_vals[1])
     output_length = length(out_vals[1])
@@ -112,15 +112,16 @@ function lyap_spectrum(invecs, model, τ)
     qrs = []
     
 
-    push!(qrs,qr(DGhat(invecs[1],model)))
+    push!(qrs,qr(DGhat(invecs[1],model)*I))
     for l in 2:(inlen - 1)
-        push!(qrs,qr(DGhat(invecs[l],model)*qrs[l-1].Q))
+        temp = qr(DGhat(invecs[l],model)*qrs[l-1].Q)
+        push!(qrs,temp)
     end
 
 
     rs = [qrpair.R for qrpair in qrs]
-    #finalR = foldl(*,[mat.R for mat in qrs])
-    (1/(inlen*τ))*sum(x -> log.(abs.(diag(x))), rs)
+    #finalR = foldl(*,rs)
+    (1/(inlen*τ))*sum(x -> log.(abs.(diag(x))), rs[1000:end])
 end
 
 
