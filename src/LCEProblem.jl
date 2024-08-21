@@ -9,23 +9,26 @@ struct EmbeddedData
     dim::Number
     tau::Number
 end
+
+function EmbeddedData(timeseries, dim, tau)
+    embedded_data = DynamicalSystems.embed(timeseries,dim,tau)
+    EmbeddedData(timeseries,embedded_data,dim,tau)
+end
+
 export EmbeddedData
 
 struct LCEProblem
-    timeseries::Vector
-    timestep::Number
     embedded_data::EmbeddedData
 end
+
+function LCEProblem(timeseries, tau, dim)
+    em = EmbeddedData(timeseries, tau, dim)
+    LCEProblem(em)
+end
+
 export LCEProblem
 
-function LCEProblem(em::EmbeddedData, step::Number)
-    ts = em.timeseries
-    LCEProblem(ts,step,em)
-end
 
-function LCEProblem(ts::AbstractArray, step::Number)
-
-end
 
 export LCEProblem
 
