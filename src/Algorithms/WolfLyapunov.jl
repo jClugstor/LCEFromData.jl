@@ -14,6 +14,33 @@ struct WolfAlgorithm <: LCEAlgorithm
     thmax 
 end
 
+"""
+    WolfAlgorithm(kwargs...)
+
+Constructor for an object that holds hyperparameters for finding an LCE using [Wolf's method](https://www.mathworks.com/matlabcentral/fileexchange/48084-wolf-lyapunov-exponent-estimation-from-a-time-series).
+Some descriptions for the keywords are taken directly from the document in the Matlab fileexchange and the paper by Alan Wolf.
+Note, unlike the original Wolf code, this returns the LCE in terms of the natural logarithm, rather than log base 2. 
+    
+Alan Wolf, Jack B. Swift, Harry L. Swinney, John A. Vastano,
+Determining Lyapunov exponents from a time series,
+Physica D: Nonlinear Phenomena,
+Volume 16, Issue 3,
+1985,
+Pages 285-317,
+ISSN 0167-2789,
+https://doi.org/10.1016/0167-2789(85)90011-9.
+(https://www.sciencedirect.com/science/article/pii/0167278985900119)
+Abstract: We present the first algorithms that allow the estimation of non-negative Lyapunov exponents from an experimental time series. Lyapunov exponents, which provide a qualitative and quantitative characterization of dynamical behavior, are related to the exponentially fast divergence or convergence of nearby orbits in phase space. A system with one or more positive Lyapunov exponents is defined to be chaotic. Our method is rooted conceptually in a previously developed technique that could only be applied to analytically defined model systems: we monitor the long-term growth rate of small volume elements in an attractor. The method is tested on model systems with known Lyapunov spectra, and applied to data for the Belousov-Zhabotinskii reaction and Couette-Taylor flow.
+
+Keyword arguments
+    - ires = 10: controls number of boxes, ires^ndim boxes
+    - maxbox = 6000: number of non-empty boxes in basgen
+    - dt = 0.01: time in seconds between series samples
+    - evolve = 20: number of samples to propagate seperation before checking if neighboring trajectory should be replaced
+    - dismin = 0.001: minimum seperation between fiducial data point an new nearest neighbor before a replacement is selected
+    - dismax = 0.3: maximum seperation between fiducial data point and new nearest neight
+    - thmax = 30
+"""
 function WolfAlgorithm(;ires = 10, maxbox = 6000, dt = 0.01, evolve = 20, dismin = 0.001, dismax = 0.3, thmax = 30)
     WolfAlgorithm(ires,maxbox,dt,evolve,dismin,dismax,thmax)
 end
