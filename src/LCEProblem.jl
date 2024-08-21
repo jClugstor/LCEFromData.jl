@@ -1,5 +1,3 @@
-using UnicodePlots
-
 abstract type LCEAlgorithm end
 export LCEAlgorithm
 

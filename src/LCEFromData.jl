@@ -1,6 +1,6 @@
 module LCEFromData
 
-import DynamicalSystems
+import DynamicalSystems: StateSpaceSet, embed
 import UnicodePlots
 
 include("LCEProblem.jl")
