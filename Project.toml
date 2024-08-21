@@ -3,6 +3,9 @@ uuid = "8b5d6e6e-ed3c-4bac-af88-1410c1426d23"
 authors = ["Jadon Clugston <jadonclugston@gmail.com> and contributors"]
 version = "0.1.0"
 
+[deps]
+DynamicalSystems = "61744808-ddfa-5f27-97ff-6e42cc95d634"
+
 [compat]
 julia = "1.9"
 DynamicalSystems = "3"
