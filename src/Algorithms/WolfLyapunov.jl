@@ -561,9 +561,9 @@ function solve(prob::LCEProblem, alg::WolfAlgorithm)
     tau = prob.embedded_data.tau
     ndim = prob.embedded_data.dim
     ires = alg.ires
-    datcnt = length(prob.timeseries)
+    datcnt = length(prob.embedded_data.timeseries)
     maxbox = alg.maxbox
-    datlist = prob.timeseries
+    datlist = prob.embedded_data.timeseries
 
     db = basgen(datlist, tau, ndim, ires, datcnt, maxbox)
 
