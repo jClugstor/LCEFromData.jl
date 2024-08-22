@@ -113,6 +113,10 @@ wolf_alg = WolfAlgorithm()
 # ╔═╡ 5e5be847-dd95-4e6f-b162-7b3357ecb5fd
 solve(LCE_prob, wolf_alg)
 
+# ╔═╡ 4ad22e17-22f2-4d8d-ac36-30326c61beae
+md"The Wolf algorithm also does not match the true value very well, so the default parameters do not fit this problem well."
+
+
 # ╔═╡ Cell order:
 # ╠═c6b1ad98-60b8-11ef-12c9-7f6a2729e4b3
 # ╟─735bb737-de5d-44d5-aaa5-f31246b98b09
@@ -144,3 +148,4 @@ solve(LCE_prob, wolf_alg)
 # ╟─777ca626-e354-4bf2-94db-cda173365453
 # ╠═d491e8fe-8e83-4fd7-bfe7-4fc6eb09d96c
 # ╠═5e5be847-dd95-4e6f-b162-7b3357ecb5fd
+# ╟─4ad22e17-22f2-4d8d-ac36-30326c61beae
