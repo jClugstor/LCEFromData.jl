@@ -47,7 +47,7 @@ export LCEMaxSolution
 function Base.show(io::IO,sol::LCEMaxSolution)
     println(io, "Solved using $(typeof(sol.algorithm))")
     println(io, "Max LCE: $(sol.maxLCE)")
-    dispUnicodePlots.lineplot(sol.LCEprogression)
+    display(UnicodePlots.lineplot(sol.LCEprogression))
 end
 
 
