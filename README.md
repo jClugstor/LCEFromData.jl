@@ -9,7 +9,7 @@ This package has the goal of combining disparate software packages and methods f
 # API
 This package is organized around the idea of `LCEProblem`s and `LCEAlgorithm`s. An `LCEProblem` object holds the time series, the delay embedded data set to use, and the dimension and lag value of the dataset. `LCEAlgorithm` objects determine what method will be used, and holds solver parameters.
 
-To use this package, first construct an `LCEProblem` using `LCEProblem(timeseries, dim, tau)`. This will construct an `LCEProblem` that holds a delay embedding of `timeseries` using the `dim` and `tau` parameters. Then construct an `LCEAlgorithm` using the desired parameters, e.g. `DivergenceAlgorithm(;lyapspan, w = 1, distance = FirstElement(), ntype = NeighborNumber(1), dxi = 1, tol = 0.25, ignore_saturation = true)`. This will result in an `LCESolution` which holds the solution information.  
+To use this package, first construct an `LCEProblem` using `LCEProblem(timeseries, dim, tau)`. This will construct an `LCEProblem` that holds a delay embedding of `timeseries` using the `dim` and `tau` parameters. Then construct an `LCEAlgorithm` using the desired parameters, e.g. `DivergenceAlgorithm(ks; w = 1, distance = FirstElement(), ntype = NeighborNumber(1), dxi = 1, tol = 0.25, ignore_saturation = true)`. This will result in an `LCESolution` which holds the solution information.  
 
 
 # Methods
