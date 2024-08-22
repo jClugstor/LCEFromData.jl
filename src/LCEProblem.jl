@@ -17,11 +17,16 @@ export EmbeddedData
 
 struct LCEProblem
     embedded_data::EmbeddedData
+    dt
 end
 
-function LCEProblem(timeseries, tau, dim)
-    em = EmbeddedData(timeseries, tau, dim)
-    LCEProblem(em)
+"""
+    LCEProblem(timeseries,dim,tau)
+Constructs an LCEProblem from `timeseries`, where `dt` is the sample rate. Holds a lag space embedded version of `timeseries` with dimension `dim` and lag `tau`.
+"""
+function LCEProblem(timeseries, dt, dim, tau)
+    em = EmbeddedData(timeseries, dim, tau)
+    LCEProblem(em,dt)
 end
 
 export LCEProblem
@@ -42,7 +47,7 @@ export LCEMaxSolution
 function Base.show(io::IO,sol::LCEMaxSolution)
     println(io, "Solved using $(typeof(sol.algorithm))")
     println(io, "Max LCE: $(sol.maxLCE)")
-    display(lineplot(sol.LCEprogression))
+    dispUnicodePlots.lineplot(sol.LCEprogression)
 end
 
 

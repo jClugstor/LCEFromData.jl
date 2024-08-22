@@ -1,5 +1,5 @@
 struct DivergenceAlgorithm <: LCEAlgorithm
-    lyapspan
+    ks
     #same as the keyword args in `lyapunov_from_data` in DynamicalSystems.jl, minus refstates
     w 
     distance
@@ -28,19 +28,19 @@ Keyword arguments:
     - ignore_saturation = true: passed to `slopefit`
 
 """
-function DivergenceAlgorithm(;lyapspan, w = 1, distance = FirstElement(), ntype = NeighborNumber(1), dxi = 1, tol = 0.25, ignore_saturation = true)
-    DivergenceAlgorithm(lyapspan,w,distance,ntype,dxi,tol,ignore_saturation)
+function DivergenceAlgorithm(ks; w = 1, distance = FirstElement(), ntype = NeighborNumber(1), dxi = 1, tol = 0.25, ignore_saturation = true)
+    DivergenceAlgorithm(ks,w,distance,ntype,dxi,tol,ignore_saturation)
 end
 
 export DivergenceAlgorithm
 
 function solve(prob::LCEProblem, alg::DivergenceAlgorithm)
     Y = prob.embedded_data.embedded_data
-    lyapspan = alg.lyapspan
-    stepsize = prob.timestep
+    ks = alg.ks
+    stepsize = prob.dt
     
-    e = lyapunov_from_data(Y,lyapspan, w = alg.w, distance = alg.distance, ntype = alg.ntype)
-    slope = slopefit(lyapspan .* stepsize,e, LargestLinearRegion(tol=alg.tol,dxi = alg.dxi), ignore_saturation = alg.ignore_saturation)
+    e = lyapunov_from_data(Y,ks, w = alg.w, distance = alg.distance, ntype = alg.ntype)
+    slope = slopefit(ks .* stepsize,e, LargestLinearRegion(tol=alg.tol,dxi = alg.dxi), ignore_saturation = alg.ignore_saturation)[1]
     LCEMaxSolution(slope,e,alg)
 end
 
