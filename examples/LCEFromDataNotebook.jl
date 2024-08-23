@@ -104,6 +104,9 @@ DynamicalSystems.lyapunov(lorenz_sys,10000)
 # ╔═╡ fd285559-d7e4-43d6-9323-9e5036e6d3a5
 md"You can see that the results don't match very closely, so some parameters will probably need changing so that the method gives a more accurate result."
 
+# ╔═╡ 72e83d2a-8a18-4a3d-9144-acb1460f9f7a
+
+
 # ╔═╡ 777ca626-e354-4bf2-94db-cda173365453
 md"## Wolf Algorithm"
 
@@ -144,7 +147,8 @@ md"The Wolf algorithm also does not match the true value very well, so the defau
 # ╠═80d53fb6-5052-473c-8f17-8ec4a5c88889
 # ╠═7e73ab0c-d8b5-4443-a303-e4e9c24550d2
 # ╠═fd3e807a-b5a8-4a02-bba0-2a63aac90820
-# ╟─fd285559-d7e4-43d6-9323-9e5036e6d3a5
+# ╠═fd285559-d7e4-43d6-9323-9e5036e6d3a5
+# ╠═72e83d2a-8a18-4a3d-9144-acb1460f9f7a
 # ╟─777ca626-e354-4bf2-94db-cda173365453
 # ╠═d491e8fe-8e83-4fd7-bfe7-4fc6eb09d96c
 # ╠═5e5be847-dd95-4e6f-b162-7b3357ecb5fd

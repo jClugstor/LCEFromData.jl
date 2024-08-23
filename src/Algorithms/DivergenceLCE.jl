@@ -19,12 +19,19 @@ Constructor for an object that holds hyperparameters for finding an LCE using th
 Uses functions `lyapunov_from_data` and `linear_region` from [ChaosTools.jl](https://juliadynamics.github.io/DynamicalSystemsDocs.jl/chaostools/stable/lyapunovs/)
 
 Keyword arguments: 
+
     - lyapspan: 
+
     - w = 1: passed to `lyapunov_from_data`, Theiler window, minimum time seperation that neighbors should have
+
     - distance = FirstElement(): passed to `lyapunov_from_data`, this specifies what distance function to use for the logarithmic distance
+
     - ntype = NeighborNumber(1): passed to `lyapunov_from_data`, the type of [neighborhood](https://juliadynamics.github.io/DynamicalSystemsDocs.jl/chaostools/stable/lyapunovs/#Neighborhood.NeighborNumber) used
+
     - dxi = 1: passed to `LargestLinearRegion`
+
     - tol = 0.25: passed to `LargestLinearRegion`
+
     - ignore_saturation = true: passed to `slopefit`
 
 """
