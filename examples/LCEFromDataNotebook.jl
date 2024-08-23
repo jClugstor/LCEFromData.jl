@@ -102,10 +102,13 @@ md"Can check result using the \"variational equation\" method."
 DynamicalSystems.lyapunov(lorenz_sys,10000)
 
 # ╔═╡ fd285559-d7e4-43d6-9323-9e5036e6d3a5
-md"You can see that the results don't match very closely, so some parameters will probably need changing so that the method gives a more accurate result."
+md"You can see that the results don't match very closely, so some parameters will probably need changing so that the method gives a more accurate result. To change the parameters of the solver, just use a keyword argument to change it from it's default."
 
 # ╔═╡ 72e83d2a-8a18-4a3d-9144-acb1460f9f7a
+solve(LCE_prob, DivergenceAlgorithm(0:1:50, w = 20, dxi = 10))
 
+# ╔═╡ d01df434-de69-466c-b649-4156f54cc4df
+md"With these parameters the result is closer to the true value"
 
 # ╔═╡ 777ca626-e354-4bf2-94db-cda173365453
 md"## Wolf Algorithm"
@@ -119,6 +122,9 @@ solve(LCE_prob, wolf_alg)
 # ╔═╡ 4ad22e17-22f2-4d8d-ac36-30326c61beae
 md"The Wolf algorithm also does not match the true value very well, so the default parameters do not fit this problem well."
 
+
+# ╔═╡ 48d86c0d-6684-4b55-8fd6-95fab6d2f401
+solve(LCE_prob, WolfAlgorithm(dismax = 1.0))
 
 # ╔═╡ Cell order:
 # ╠═c6b1ad98-60b8-11ef-12c9-7f6a2729e4b3
@@ -147,9 +153,11 @@ md"The Wolf algorithm also does not match the true value very well, so the defau
 # ╠═80d53fb6-5052-473c-8f17-8ec4a5c88889
 # ╠═7e73ab0c-d8b5-4443-a303-e4e9c24550d2
 # ╠═fd3e807a-b5a8-4a02-bba0-2a63aac90820
-# ╠═fd285559-d7e4-43d6-9323-9e5036e6d3a5
+# ╟─fd285559-d7e4-43d6-9323-9e5036e6d3a5
 # ╠═72e83d2a-8a18-4a3d-9144-acb1460f9f7a
+# ╠═d01df434-de69-466c-b649-4156f54cc4df
 # ╟─777ca626-e354-4bf2-94db-cda173365453
 # ╠═d491e8fe-8e83-4fd7-bfe7-4fc6eb09d96c
 # ╠═5e5be847-dd95-4e6f-b162-7b3357ecb5fd
 # ╟─4ad22e17-22f2-4d8d-ac36-30326c61beae
+# ╠═48d86c0d-6684-4b55-8fd6-95fab6d2f401
