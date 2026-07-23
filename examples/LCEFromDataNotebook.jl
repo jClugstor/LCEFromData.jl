@@ -124,7 +124,10 @@ md"The Wolf algorithm also does not match the true value very well, so the defau
 
 
 # ╔═╡ 48d86c0d-6684-4b55-8fd6-95fab6d2f401
-solve(LCE_prob, WolfAlgorithm(dismax = 1.0))
+solve(LCE_prob, WolfAlgorithm(evolve = 350))
+
+# ╔═╡ a96b0256-8081-4ce7-9da4-72fb08608ef4
+md"This seems closer to the true value, but you have to be careful using this method. It's able to produce any number given the right parameters."
 
 # ╔═╡ Cell order:
 # ╠═c6b1ad98-60b8-11ef-12c9-7f6a2729e4b3
@@ -161,3 +164,4 @@ solve(LCE_prob, WolfAlgorithm(dismax = 1.0))
 # ╠═5e5be847-dd95-4e6f-b162-7b3357ecb5fd
 # ╟─4ad22e17-22f2-4d8d-ac36-30326c61beae
 # ╠═48d86c0d-6684-4b55-8fd6-95fab6d2f401
+# ╠═a96b0256-8081-4ce7-9da4-72fb08608ef4

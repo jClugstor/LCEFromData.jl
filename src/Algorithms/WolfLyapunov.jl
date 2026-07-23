@@ -44,8 +44,8 @@ Keyword arguments
 
     - dismin = 0.001: minimum seperation between fiducial data point an new nearest neighbor before a replacement is selected
 
-    - dismax = 0.3: maximum seperation between fiducial data point and new nearest neight
-    
+    - dismax = 0.3: maximum seperation between fiducial data point and new nearest neighbor
+
     - thmax = 30
 """
 function WolfAlgorithm(;ires = 10, maxbox = 6000, dt = 0.01, evolve = 20, dismin = 0.001, dismax = 0.3, thmax = 30)
